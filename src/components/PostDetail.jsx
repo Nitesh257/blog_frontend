@@ -159,7 +159,7 @@ const PostDetail = () => {
       {post.coverImage && (
         <div>
           <img
-            src={`https://blogbackend-zz2d.onrender.com${post.coverImage}`}
+            src={post.coverImage}
             alt="Post Cover"
             className="post-image"
             style={{ width: "100%", height: "100%", objectFit: "cover" }}

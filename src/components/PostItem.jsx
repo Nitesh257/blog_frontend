@@ -67,7 +67,7 @@ const PostItem = ({ post }) => {
       >
         {post.coverImage && (
           <img
-            src={`https://blogbackend-zz2d.onrender.com${post.coverImage}`}
+            src={post.coverImage}
             alt="Cover"
             style={{
               width: "100%",

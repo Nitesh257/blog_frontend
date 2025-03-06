@@ -11,6 +11,7 @@ const PostForm = () => {
   const [content, setContent] = useState("");
   const [tags, setTags] = useState("");
   const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false); // ✅ Add loading state
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,10 +21,11 @@ const PostForm = () => {
       return;
     }
 
+    setLoading(true); // ✅ Start loading
     const token = localStorage.getItem("token");
 
     try {
-      // 1. Create post without image
+      // 1️⃣ Create post without image
       const postResponse = await fetch("https://blogbackend-zz2d.onrender.com/api/posts", {
         method: "POST",
         headers: {
@@ -42,19 +44,24 @@ const PostForm = () => {
       if (postData.success) {
         const postId = postData.post._id;
 
-        // 2. Upload cover image if selected
+        // 2️⃣ Upload cover image if selected
         if (image) {
           const formData = new FormData();
           formData.append("coverImage", image);
 
-          await fetch(`https://blogbackend-zz2d.onrender.com/api/posts/${postId}/upload`, {
+          const imageResponse = await fetch(`https://blogbackend-zz2d.onrender.com/api/posts/${postId}/upload`, {
             method: "POST",
             headers: { Authorization: `Bearer ${token}` },
             body: formData,
           });
+
+          const imageData = await imageResponse.json();
+          if (!imageData.success) {
+            toast.error("Image upload failed.");
+          }
         }
 
-        toast.error("Post created successfully!");
+        toast.success("Post created successfully!"); // ✅ Fixed success toast
         navigate(`/posts/${postId}`);
       } else {
         toast.error("Failed to create post.");
@@ -62,6 +69,8 @@ const PostForm = () => {
     } catch (err) {
       console.error("Error creating post:", err);
       toast.error("An error occurred.");
+    } finally {
+      setLoading(false); // ✅ Stop loading
     }
   };
 
@@ -100,16 +109,17 @@ const PostForm = () => {
         />
         <button
           type="submit"
+          disabled={loading} // ✅ Disable button while loading
           style={{
             padding: "12px",
-            backgroundColor: "#3182ce",
+            backgroundColor: loading ? "#ccc" : "#3182ce",
             color: "#fff",
             border: "none",
             borderRadius: "8px",
-            cursor: "pointer",
+            cursor: loading ? "not-allowed" : "pointer",
           }}
         >
-          Create Post
+          {loading ? "Creating..." : "Create Post"}
         </button>
       </form>
     </div>
