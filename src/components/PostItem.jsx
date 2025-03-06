@@ -67,7 +67,7 @@ const PostItem = ({ post }) => {
       >
         {post.coverImage && (
           <img
-            src={post.coverImage}
+          src={post.coverImage}
             alt="Cover"
             style={{
               width: "100%",
