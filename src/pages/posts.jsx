@@ -32,7 +32,7 @@ const Posts = () => {
           ))}
         </div>
       ) : (
-        <p style={{ textAlign: "center", color: "#4a5568" }}>No posts available.</p>
+        <p style={{ textAlign: "center", color: "#4a5568" }}>Login To see Posts</p>
       )}
      </div>
     </div>
