@@ -2,18 +2,28 @@ import React, { useEffect, useState } from "react";
 import { Analytics } from "../components/Analytics";
 import { useAuth } from "../store/auth";
 import PostItem from "../components/PostItem";
-
+import useCountdownToast from "../components/countdown";
 export const Home = () => {
   const { isLoggedIn, user } = useAuth();
   const [posts, setPosts] = useState([]);
-
+  const { showToastWithTimer, dismissToast } = useCountdownToast();
   useEffect(() => {
+    showToastWithTimer("Getting Posts", 60);
+  
     fetch("https://blogbackend-zz2d.onrender.com/api/posts")
       .then((res) => res.json())
-      .then((data) => setPosts(data.posts || []))
-      .catch((err) => console.error("Error fetching posts:", err));
+      .then((data) => {
+        setPosts(data.posts || []);
+        dismissToast(); 
+      })
+      .catch((err) => {
+        console.error("Error fetching posts:", err);
+        dismissToast(); 
+        toast.error("Failed to fetch posts.");
+      });
+  
+    return () => dismissToast(); 
   }, []);
-
   return (
     <>
       <main>
@@ -166,11 +176,10 @@ export const Home = () => {
           </div>
         ) : (
           <p style={{ textAlign: "center", color: "#4a5568" }}>
-            No posts available.
+            Login & See Posts
           </p>
         )}
 
-        {/* {isLoggedIn && <Analytics />} */}
       </div>
     </>
   );

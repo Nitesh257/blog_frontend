@@ -2,30 +2,32 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../store/auth";
 import { toast } from "react-toastify";
+import useCountdownToast from "./countdown";
 
 const PostForm = () => {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const { showToastWithTimer, dismissToast } = useCountdownToast();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState("");
   const [image, setImage] = useState(null);
-  const [loading, setLoading] = useState(false); // ✅ Add loading state
+  const [loading, setLoading] = useState(false); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    showToastWithTimer("Creating Post",60);
     if (!isLoggedIn) {
       toast.error("Please log in to create a post.");
       return;
     }
 
-    setLoading(true); // ✅ Start loading
+    setLoading(true);
     const token = localStorage.getItem("token");
 
     try {
-      // 1️⃣ Create post without image
+      //  Create post without image
       const postResponse = await fetch("https://blogbackend-zz2d.onrender.com/api/posts", {
         method: "POST",
         headers: {
@@ -40,11 +42,12 @@ const PostForm = () => {
       });
 
       const postData = await postResponse.json();
+      dismissToast();
 
       if (postData.success) {
         const postId = postData.post._id;
 
-        // 2️⃣ Upload cover image if selected
+        //  Upload cover image if selected
         if (image) {
           const formData = new FormData();
           formData.append("coverImage", image);
@@ -61,7 +64,7 @@ const PostForm = () => {
           }
         }
 
-        toast.success("Post created successfully!"); // ✅ Fixed success toast
+        toast.success("Post created successfully!"); 
         navigate(`/posts/${postId}`);
       } else {
         toast.error("Failed to create post.");
@@ -70,7 +73,7 @@ const PostForm = () => {
       console.error("Error creating post:", err);
       toast.error("An error occurred.");
     } finally {
-      setLoading(false); // ✅ Stop loading
+      setLoading(false); 
     }
   };
 
@@ -109,7 +112,7 @@ const PostForm = () => {
         />
         <button
           type="submit"
-          disabled={loading} // ✅ Disable button while loading
+          disabled={loading} 
           style={{
             padding: "12px",
             backgroundColor: loading ? "#ccc" : "#3182ce",

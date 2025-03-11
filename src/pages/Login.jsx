@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../store/auth";
 import {toast } from 'react-toastify';
+import useCountdownToast from "../components/countdown"
 const URL="https://blogbackend-zz2d.onrender.com/api/auth/login";
 export const Login = () => {
     const [user, setUser] = useState({
@@ -10,6 +11,7 @@ export const Login = () => {
     });
     const navigate=useNavigate();
     const {storetokenInLS}=useAuth();
+    const { showToastWithTimer, dismissToast } = useCountdownToast();
     //handling the i.p values
     const handleInput=(e)=>{
         let name=e.target.name;
@@ -22,6 +24,7 @@ export const Login = () => {
     //handling form submission
     const handleSubmit=async ( e)=>{
         e.preventDefault();
+        showToastWithTimer("Logging in", 60);
         try {
           const response=await fetch(URL,{
             method:"POST",
@@ -32,6 +35,7 @@ export const Login = () => {
             body:JSON.stringify(user)
           });
           const res_data=await response.json();
+          dismissToast();
           if(response.ok){
             toast.success("Login succesful");
             storetokenInLS(res_data.token);

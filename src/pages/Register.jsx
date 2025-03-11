@@ -2,6 +2,7 @@ import { useState } from "react";
 import {useNavigate} from "react-router-dom"
 import { useAuth } from "../store/auth";
 import { toast } from "react-toastify";
+import useCountdownToast from "../components/countdown";
 export const Register = () => {
   const [user, setUser] = useState({
     username: "",
@@ -11,6 +12,7 @@ export const Register = () => {
   });
   const navigate=useNavigate();
   const {storetokenInLS}=useAuth();
+  const { showToastWithTimer, dismissToast } = useCountdownToast();
 
   const handleInput = (e) => {
     console.log(e);
@@ -26,6 +28,7 @@ export const Register = () => {
   // handle form on submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+    showToastWithTimer("Registring",60);
     console.log(user);
     try {
       const respone = await fetch(`https://blogbackend-zz2d.onrender.com/api/auth/register`, {
@@ -36,6 +39,7 @@ export const Register = () => {
         body: JSON.stringify(user),
       });
       const res_data=await respone.json();
+      dismissToast();
       console.log("res from server",res_data.message);
       if (respone.ok) {
        
