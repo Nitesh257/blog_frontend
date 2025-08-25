@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../store/auth";
@@ -39,63 +41,68 @@ const PostItem = ({ post }) => {
         toast.error("Failed to toggle like.");
       });
   };
-  console.log("Post Data:", post);
 
   return (
     <div
       style={{
-        border: "1px solid #ddd",
-        borderRadius: "25px",
-        margin: "10px",
+        border: "1px solid #e2e8f0",
+        borderRadius: "20px",
+        margin: "16px",
         padding: "16px",
-        width: "35vw",
-        height: "50vh",
-        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+        width: "350px",
+        minHeight: "420px",
+        boxShadow: "0 6px 16px rgba(0, 0, 0, 0.08)",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        backgroundColor: "#e1d2d2ff",
+        transition: "transform 0.2s ease, box-shadow 0.2s ease",
       }}
+      className="post-card"
     >
       <div
         style={{
           width: "100%",
-          height: "40%",
+          height: "180px",
           overflow: "hidden",
-          borderRadius: "15px",
+          borderRadius: "12px",
           marginBottom: "12px",
         }}
       >
         {post.coverImage && (
           <img
-          src={post.coverImage}
+            src={post.coverImage}
             alt="Cover"
             style={{
               width: "100%",
               height: "100%",
               objectFit: "cover",
+              transition: "transform 0.3s ease",
             }}
             className="post-image"
           />
         )}
       </div>
+
       <h2
         style={{
-          fontSize: "2vw",
+          fontSize: "1.4rem",
           textAlign: "center",
-          fontWeight: "600",
-          marginBottom: "12px",
+          fontWeight: "700",
+          marginBottom: "8px",
+          color: "#2d3748",
           overflow: "hidden",
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",
         }}
       >
-        {" "}
         {post.title}
       </h2>
+
       <p
         style={{
           textAlign: "center",
-          fontSize: "1vw",
+          fontSize: "0.95rem",
           color: "#4a5568",
           marginBottom: "16px",
           overflow: "hidden",
@@ -103,11 +110,10 @@ const PostItem = ({ post }) => {
           whiteSpace: "nowrap",
         }}
       >
-        {post.content.substring(0, 50)}
+        {post.content.substring(0, 80)}...
       </p>
 
       <div
-        className=""
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -119,28 +125,33 @@ const PostItem = ({ post }) => {
           style={{
             padding: "8px 16px",
             borderRadius: "8px",
-            backgroundColor: hasLiked ? "blue" : "grey",
+            backgroundColor: hasLiked ? "#3182ce" : "#a0aec0",
             color: "#fff",
             border: "none",
             cursor: "pointer",
-            marginBottom: "10px",
+            fontWeight: "500",
+            transition: "background-color 0.2s ease",
           }}
           onClick={handleLikeToggle}
         >
           {hasLiked ? "Unlike" : "Like"} ({likes.length})
         </button>
+
+        <Link
+          to={`/posts/${post._id}`}
+          style={{
+            padding: "8px 16px",
+            borderRadius: "8px",
+            backgroundColor: "#38a169",
+            color: "#fff",
+            textDecoration: "none",
+            fontWeight: "500",
+            transition: "background-color 0.2s ease",
+          }}
+        >
+          Read More
+        </Link>
       </div>
-      <Link
-        to={`/posts/${post._id}`}
-        style={{
-          fontSize: "1vw",
-          color: "#3182ce",
-          textDecoration: "none",
-          fontWeight: "500",
-        }}
-      >
-        Read More
-      </Link>
     </div>
   );
 };
